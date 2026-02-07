@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Be My Valentine 💖</title>
+
+<style>
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #ffe6ef, #fff7fb);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .card{
+    background:#fff;
+    width:100%;
+    max-width:520px;
+    padding:24px;
+    border-radius:26px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.15);
+    text-align:center;
+  }
+
+  h1{
+    color:#ff2f5b;
+    margin-bottom:10px;
+  }
+
+  .sub{
+    color:#6f5b66;
+    margin-bottom:18px;
+  }
+
+  .polaroids{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-bottom:20px;
+  }
+
+  .polaroid{
+    width:150px;
+    background:#fff;
+    border:2px solid #ffd0dd;
+    border-radius:18px;
+    padding:10px;
+    box-shadow:0 10px 22px rgba(0,0,0,.1);
+  }
+
+  .polaroid img{
+    width:100%;
+    height:130px;
+    object-fit:cover;
+    border-radius:14px;
+  }
+
+  .caption{
+    margin-top:6px;
+    font-size:12px;
+    color:#8a6f7b;
+  }
+
+  /* BUTTON AREA */
+  .buttons{
+    position:relative;
+    width:100%;
+    max-width:360px;
+    height:70px;
+    margin:0 auto;
+  }
+
+  button{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    border:none;
+    border-radius:999px;
+    padding:14px 22px;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+    transition: transform 600ms cubic-bezier(.2,.9,.2,1),
+                opacity 300ms ease;
+    min-width:140px;
+    user-select:none;
+  }
+
+  #no{
+    left:0;
+    background:#f7f3f6;
+    border:2px solid #f1d6de;
+    color:#6a5a62;
+    z-index:1;
+  }
+
+  #yes{
+    right:0;
+    background:linear-gradient(180deg,#ff6b95,#ff4d6d);
+    color:#fff;
+    z-index:2; /* YES will overlap NO as it grows */
+    transform-origin: center;
+  }
+
+  /* SUCCESS SCREEN */
+  .fullscreen{
+    position:fixed;
+    inset:0;
+    background:linear-gradient(180deg,#ff4d6d,#ff7aa6);
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    z-index:999;
+  }
+
+  .yay{
+    font-size:64px;
+    font-weight:900;
+    margin-bottom:14px;
+  }
+
+  .danceWrap{
+    width:320px;
+    max-width:90vw;
+    border-radius:24px;
+    overflow:hidden;
+    border:3px solid rgba(255,255,255,.6);
+  }
+
+  .danceWrap img{
+    width:100%;
+    animation:dance .7s ease-in-out infinite;
+    transform-origin:50% 80%;
+  }
+
+  @keyframes dance{
+    0%{ transform:rotate(-2deg) translateY(0); }
+    50%{ transform:rotate(2deg) translateY(-6px); }
+    100%{ transform:rotate(-2deg) translateY(0); }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Will you be my Valentine? 💘</h1>
+  <p class="sub">I’ll bring snacks, hugs, and a plan. You just show up cute.</p>
+
+  <div class="polaroids">
+    <div class="polaroid">
+      <img src="billy1.png" alt="Billy sleeping">
+      <div class="caption">certified cuddle inspector</div>
+    </div>
+    <div class="polaroid">
+      <img src="billy3.png" alt="Billy peeking">
+      <div class="caption">watching you choose wisely</div>
+    </div>
+  </div>
+
+  <div class="buttons">
+    <button id="no">No 🙃</button>
+    <button id="yes">Yes 💖</button>
+  </div>
+</div>
+
+<script>
+  let yesScale = 1;
+  const GROW_STEP = 0.18; // ~25 clicks to full overlap
+  const MAX_SCALE = 6;
+
+  const yes  = document.getElementById("yes");
+  const no   = document.getElementById("no");
+  const card = document.getElementById("card");
+
+  function updateYes(){
+    yes.style.transform = "translateY(-50%) scale(" + yesScale + ")";
+  }
+
+  yes.addEventListener("click", () => {
+    card.remove();
+
+    const screen = document.createElement("div");
+    screen.className = "fullscreen";
+    screen.innerHTML = `
+      <div class="yay">YAAAAY 💖</div>
+      <div class="danceWrap">
+        <img src="billy2.png" alt="Billy dancing">
+      </div>
+      <p>It’s a date. I’ll plan everything 😌</p>
+    `;
+    document.body.appendChild(screen);
+  });
+
+  no.addEventListener("click", () => {
+    yesScale = Math.min(MAX_SCALE, yesScale + GROW_STEP);
+    updateYes();
+
+    // optional: NO fades slightly as it loses ground
+    no.style.opacity = Math.max(0.15, 1 - (yesScale - 1) / 4);
+  });
+
+  updateYes();
+</script>
+
+</body>
+</html>
